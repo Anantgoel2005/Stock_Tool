@@ -187,14 +187,15 @@ def get_live_prediction_with_reasoning(
     return_articles: bool = False,
 ) -> Union[str, Tuple[str, List[str]]]:
     model_path = _build_model_path(symbol, investment_horizon)
-    logging.info(
-        "Retraining model for live prediction: %s (%s horizon)",
-        symbol,
-        investment_horizon,
-    )
-    success = train_and_save_model(symbol, model_path, investment_horizon)
-    if not success:
-        return f"Failed to train a new model for '{symbol}' ({investment_horizon})."
+    if not model_path.exists():
+        logging.info(
+            "No model found for '%s' (%s horizon). Training new model...",
+            symbol,
+            investment_horizon,
+        )
+        success = train_and_save_model(symbol, model_path, investment_horizon)
+        if not success:
+            return f"Failed to train a new model for '{symbol}' ({investment_horizon})."
 
     try:
         loaded = joblib.load(model_path)
