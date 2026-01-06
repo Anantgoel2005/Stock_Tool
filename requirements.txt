@@ -1,0 +1,12 @@
+joblib
+pandas
+torch
+transformers
+xgboost
+yfinance
+scikit-learn
+fastapi
+uvicorn
+jinja2
+feedparser
+

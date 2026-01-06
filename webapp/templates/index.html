@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stock Prediction Tool | AI-Powered Market Analysis</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    />
+</head>
+
+<body>
+    <div class="gradient-bg"></div>
+    <main class="container">
+        <header>
+            <div class="header-content">
+                <h1>
+                    <span class="icon">📈</span>
+                    Stock Prediction Tool
+                </h1>
+                <p class="subtitle">AI-powered predictions using FinBERT sentiment analysis and technical indicators</p>
+            </div>
+        </header>
+
+        <section class="card config-card">
+            <form id="config-form" novalidate>
+                <div class="config-main">
+                    <div class="config-primary">
+                        <div class="input-group">
+                            <label for="symbol">Stock Ticker</label>
+                            <input 
+                                id="symbol" 
+                                type="text" 
+                                value="{{ defaults.symbol }}" 
+                                placeholder="e.g., HDFCBANK.NS, GOOG, AAPL"
+                                required 
+                                autocomplete="off"
+                            />
+                        </div>
+                        <div class="input-group">
+                            <label for="horizon">Timeframe</label>
+                            <select id="horizon">
+                                <option value="short_term" {% if defaults.horizon == "short_term" %}selected{% endif %}>5 Days</option>
+                                <option value="long_term" {% if defaults.horizon == "long_term" %}selected{% endif %}>30 Days</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="config-actions single">
+                        <button type="button" id="predict-btn" class="btn btn-primary">
+                            <span class="btn-icon">🔮</span>
+                            <span class="btn-text">Predict</span>
+                            <span class="btn-loader"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="config-advanced" id="advanced-config">
+                    <button type="button" class="toggle-advanced" id="toggle-advanced">
+                        <span>Advanced Options</span>
+                        <span class="toggle-icon">▼</span>
+                    </button>
+                    <div class="advanced-content" id="advanced-content">
+                        <div class="input-group">
+                            <label for="news-days">News Lookback (days)</label>
+                            <input
+                                id="news-days"
+                                type="number"
+                                min="1"
+                                max="30"
+                                value="{{ defaults.news_days }}"
+                                required
+                            />
+                        </div>
+                        <div class="input-group">
+                            <label for="news-query">Custom News Query (optional)</label>
+                            <input 
+                                id="news-query" 
+                                type="text" 
+                                placeholder="Company name or keywords..." 
+                                autocomplete="off"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <section class="grid two-column">
+            <article class="card result-card">
+                <div class="card-header">
+                    <h3>
+                        <span class="card-icon">📊</span>
+                        Prediction Analysis
+                    </h3>
+                </div>
+                <div class="result-container" id="result-container">
+                    <div id="result-area" class="result-content">
+                        <div class="empty-state">
+                            <span class="empty-icon">💡</span>
+                            <p>Click "Predict" to see AI-powered stock analysis</p>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card articles-card">
+                <div class="card-header">
+                    <h3>
+                        <span class="card-icon">📰</span>
+                        News Feed
+                        <span id="articles-count" class="badge">0</span>
+                    </h3>
+                    <div class="articles-controls">
+                        <button type="button" id="expand-all-articles" class="icon-btn" title="Expand all">
+                            <span>🔽</span>
+                        </button>
+                        <button type="button" id="collapse-all-articles" class="icon-btn" title="Collapse all">
+                            <span>🔼</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="articles-container">
+                    <div id="articles-list" class="articles-list">
+                        <div class="empty-state-item">
+                            <span class="empty-icon">📄</span>
+                            <p>No articles loaded yet</p>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </section>
+
+        <section class="card full-width log-card">
+            <div class="card-header">
+                <h3>
+                    <span class="card-icon">📋</span>
+                    Activity Log
+                    <button type="button" id="clear-logs-btn" class="clear-btn" title="Clear logs">
+                        Clear
+                    </button>
+                </h3>
+            </div>
+            <div class="log-area" id="log-area">
+                <div class="log-entry log-info">
+                    <span class="log-time"></span>
+                    <span class="log-message">System ready. Enter a ticker to get started.</span>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="footer-content">
+                <p class="disclaimer">
+                    <span class="disclaimer-icon">⚠️</span>
+                    <span>This tool provides experimental predictions only and should not be considered as financial advice. Always conduct your own research before making investment decisions.</span>
+                </p>
+            </div>
+        </footer>
+    </main>
+    <script src="/static/app.js" defer></script>
+</body>
+
+</html>
+
