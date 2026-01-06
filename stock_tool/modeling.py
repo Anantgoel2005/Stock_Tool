@@ -240,7 +240,17 @@ def get_live_prediction_with_reasoning(
     )
 
     if news_articles:
-        sentiment_scores = batch_sentiment_scores(news_articles)
+        # Cap number of articles for faster sentiment while keeping variety.
+        if len(news_articles) > 25:
+            logging.info(
+                "Truncating news articles from %s to 25 for sentiment scoring.",
+                len(news_articles),
+            )
+            news_for_sentiment = news_articles[:25]
+        else:
+            news_for_sentiment = news_articles
+
+        sentiment_scores = batch_sentiment_scores(news_for_sentiment)
         avg_sentiment = (
             sum(sentiment_scores) / len(sentiment_scores) if sentiment_scores else 0.0
         )
