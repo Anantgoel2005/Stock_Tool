@@ -17,6 +17,7 @@ MODEL_FEATURES = [
 ]
 
 TRAINING_YEARS = 5
+MODEL_MAX_AGE_DAYS = 7
 
 # --- External services ------------------------------------------------------------
 

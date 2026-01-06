@@ -11,7 +11,7 @@ import yfinance as yf
 from sklearn.calibration import CalibratedClassifierCV
 from xgboost import XGBClassifier
 
-from .config import MODEL_FEATURES, MODELS_DIR, TRAINING_YEARS
+from .config import MODEL_FEATURES, MODELS_DIR, MODEL_MAX_AGE_DAYS, TRAINING_YEARS
 from .features import create_features
 from .news import fetch_news_articles
 from .sentiment import batch_sentiment_scores
@@ -187,12 +187,37 @@ def get_live_prediction_with_reasoning(
     return_articles: bool = False,
 ) -> Union[str, Tuple[str, List[str]]]:
     model_path = _build_model_path(symbol, investment_horizon)
+    needs_retrain = False
+
     if not model_path.exists():
+        needs_retrain = True
         logging.info(
             "No model found for '%s' (%s horizon). Training new model...",
             symbol,
             investment_horizon,
         )
+    else:
+        try:
+            mtime = datetime.fromtimestamp(model_path.stat().st_mtime)
+            age_days = (datetime.now() - mtime).days
+            if age_days >= MODEL_MAX_AGE_DAYS:
+                needs_retrain = True
+                logging.info(
+                    "Model for '%s' (%s) is %s days old; retraining.",
+                    symbol,
+                    investment_horizon,
+                    age_days,
+                )
+        except Exception as exc:
+            needs_retrain = True
+            logging.warning(
+                "Could not read model age for %s (%s): %s. Retraining.",
+                symbol,
+                investment_horizon,
+                exc,
+            )
+
+    if needs_retrain:
         success = train_and_save_model(symbol, model_path, investment_horizon)
         if not success:
             return f"Failed to train a new model for '{symbol}' ({investment_horizon})."
