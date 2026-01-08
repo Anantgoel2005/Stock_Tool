@@ -286,7 +286,7 @@ function showResult(content, isError = false) {
             const primary = items[0];
             const extraCount = items.length - 1;
             const t = primary.type || "neutral";
-
+            
             html += `
                 <div class="reasoning-block">
                     <div class="reasoning-block-header">
@@ -303,7 +303,7 @@ function showResult(content, isError = false) {
                 </div>
             `;
         });
-
+        
         html += `
                 </div>
             </div>
