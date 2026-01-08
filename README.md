@@ -32,3 +32,4 @@ Browse to http://127.0.0.1:8000 and use the interface to train or predict. Enter
 - Training uses a holdout split for probability calibration (sigmoid) and auto-tunes BUY/HOLD/SELL thresholds to favor confident actions.
 - If insufficient validation data is available, calibration falls back to default thresholds (BUY≥0.60, SELL≤0.40).
 
+The site can currently be accessed via https://stock-tool-wzo4.onrender.com/ . Do note that as it is running on a free version of render, initialization may take some time. This is subject to change in the future.
